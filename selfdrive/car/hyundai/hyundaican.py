@@ -171,6 +171,8 @@ def create_scc12(packer, apply_accel, enabled, scc_live, gaspressed, brakepresse
       values["StopReq"] = 1
     else:
       values["StopReq"] = 0
+    values["CF_VSM_ConfMode"] = 1 #Jason
+    values["AEB_Status"] = 1 # Jason
     values["ACCMode"] = 1 if enabled else 0 # 2 if gas padel pressed
   values["CR_VSM_Alive"] = cnt
   values["CR_VSM_ChkSum"] = 0
@@ -181,6 +183,9 @@ def create_scc12(packer, apply_accel, enabled, scc_live, gaspressed, brakepresse
 
 def create_scc13(packer, scc13):
   values = scc13
+  values["SCCDrvModeRValue"] = 2 #Jason
+  values["SCC_Equip"] = 1 #Jason
+  values["Lead_Veh_Dep_Alert_USM"] = 2 #Jason
   return packer.make_can_msg("SCC13", 0, values)
 
 def create_scc14(packer, enabled, scc14, aebcmdact, lead_visible, lead_dist, v_ego, standstill, car_fingerprint):
@@ -227,13 +232,14 @@ def create_fca11(packer, fca11, fca11cnt, fca11supcnt):
   values["CR_FCA_Alive"] = fca11cnt
   values["Supplemental_Counter"] = fca11supcnt
   values["CR_FCA_ChkSum"] = 0
+  values["FCA_Status"] = 1 #Jason
   dat = packer.make_can_msg("FCA11", 0, values)[2]
   values["CR_FCA_ChkSum"] = 16 - sum([sum(divmod(i, 16)) for i in dat]) % 16
   return packer.make_can_msg("FCA11", 0, values)
 
 def create_fca12(packer):
   values = {
-    "FCA_USM": 3,
+    "FCA_USM": 1, #Jason change from 3 to 1
     "FCA_DrvSetState": 2,
   }
   return packer.make_can_msg("FCA12", 0, values)

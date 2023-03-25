@@ -201,11 +201,12 @@ class CarState(CarStateBase):
       self.driverAcc_time -= 1
 
     # cruise state
-    ret.cruiseState.enabled = (cp_scc.vl["SCC12"]["ACCMode"] != 0) if not self.no_radar else \
-                                      cp.vl["LVR12"]["CF_Lvr_CruiseSet"] != 0
-    ret.cruiseState.available = (cp_scc.vl["SCC11"]["MainMode_ACC"] != 0) if not self.no_radar else \
-                                      cp.vl["EMS16"]["CRUISE_LAMP_M"] != 0
-
+    # ret.cruiseState.enabled = (cp_scc.vl["SCC12"]["ACCMode"] != 0) if not self.no_radar else \
+    #                                   cp.vl["LVR12"]["CF_Lvr_CruiseSet"] != 0
+    # ret.cruiseState.available = (cp_scc.vl["SCC11"]["MainMode_ACC"] != 0) if not self.no_radar else \
+    #                                   cp.vl["EMS16"]["CRUISE_LAMP_M"] != 0
+    ret.cruiseState.available = cp.vl["TCS13"]["ACCEnable"] == 1 #Jason
+    ret.cruiseState.enabled = cp.vl["TCS13"]["ACC_REQ"] == 1 #Jason
     ret.cruiseState.standstill = cp_scc.vl["SCC11"]["SCCInfoDisplay"] == 4. if not self.no_radar else False
     self.cruiseState_standstill = ret.cruiseState.standstill
     self.is_set_speed_in_mph = bool(cp.vl["CLU11"]["CF_Clu_SPEED_UNIT"])
@@ -445,6 +446,7 @@ class CarState(CarStateBase):
       ("DriverOverride", "TCS13"),
       ("PBRAKE_ACT", "TCS13"),
       ("CF_VSM_Avail", "TCS13"),
+      ("ACC_REQ", "TCS13"), #Jason
 
       ("ESC_Off_Step", "TCS15"),
       ("AVH_LAMP", "TCS15"),
