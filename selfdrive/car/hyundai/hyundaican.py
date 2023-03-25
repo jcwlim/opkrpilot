@@ -114,10 +114,11 @@ def create_hda_mfc(packer, CS, enabled, left_lane, right_lane ):
   # HDA_Icon_State 2 = HDA active
   return packer.make_can_msg("LFAHDA_MFC", 0, values)  
 
-def create_scc11(packer, frame, set_speed, lead_visible, scc_live, lead_dist, lead_vrel, lead_yrel, car_fingerprint, speed, standstill, gap_setting, stopping, radar_recognition, scc11):
+def create_scc11(packer, frame, set_speed, lead_visible, scc_live, lead_dist, lead_vrel, lead_yrel, car_fingerprint, speed, standstill, gap_setting, stopping, radar_recognition, scc11,scc11cnt):
   values = scc11
-  values["AliveCounterACC"] = frame // 2 % 0x10
+  # values["AliveCounterACC"] = frame // 2 % 0x10
   if not radar_recognition:
+    values["AliveCounterACC"] = scc11cnt
     if stopping:
       values["SCCInfoDisplay"] = 4
     else:
@@ -127,6 +128,7 @@ def create_scc11(packer, frame, set_speed, lead_visible, scc_live, lead_dist, le
       values["SCCInfoDisplay"] = 4
     else:
       values["SCCInfoDisplay"] = 0
+    values["AliveCounterACC"] = scc11cnt
     values["DriverAlertDisplay"] = 0
     values["MainMode_ACC"] = 1
     values["VSetDis"] = set_speed
