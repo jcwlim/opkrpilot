@@ -977,7 +977,8 @@ class CarController():
             self.fca11inc += 4
           self.fca11alivecnt = self.fca11maxcnt - self.fca11inc
           if CS.CP.fcaBus == -1:
-            can_sends.append(create_fca11(self.packer, CS.fca11, self.fca11alivecnt, self.fca11supcnt))
+            print("test")
+            #can_sends.append(create_fca11(self.packer, CS.fca11, self.fca11alivecnt, self.fca11supcnt))
 
         self.scc12cnt += 1
         self.scc12cnt %= 0xF

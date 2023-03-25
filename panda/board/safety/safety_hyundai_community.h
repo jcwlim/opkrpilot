@@ -70,8 +70,8 @@ static int hyundai_community_rx_hook(CANPacket_t *to_push) {
     }
   }
   // check SCC on Bus
-  // if ((addr == 1056 || addr == 1057) && HKG_scc_bus != bus) {
-  if ((addr == 1057) && HKG_scc_bus != bus) {
+  if ((addr == 1056 || addr == 1057) && HKG_scc_bus != bus) {
+  //if ((addr == 1057) && HKG_scc_bus != bus) {
     if (bus != 1 || !HKG_LCAN_on_bus1) {
       HKG_scc_bus = bus;
       if (bus == 1) {if (!HKG_forward_bus1) {HKG_forward_bus1 = true;}}
@@ -85,8 +85,8 @@ static int hyundai_community_rx_hook(CANPacket_t *to_push) {
       update_sample(&torque_driver, torque_driver_new);
     }
 
-    //if (addr == 1056 && !OP_SCC_live) { // for cars without long control
-    if (addr == 1057 && !OP_SCC_live) { // for cars without long control
+    if (addr == 1056 && !OP_SCC_live) { // for cars without long control
+    //if (addr == 1057 && !OP_SCC_live) { // for cars without long control
       // 2 bits: 13-14
       //int cruise_engaged = GET_BYTES_04(to_push) & 0x1; // ACC main_on signal
       int cruise_engaged = (GET_BYTES_04(to_push) >> 13) & 0x3; // ACC main_on signal
