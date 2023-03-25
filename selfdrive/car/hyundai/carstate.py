@@ -11,7 +11,7 @@ from common.params import Params
 
 GearShifter = car.CarState.GearShifter
 
-FCA_OPT = Params().get_bool('RadarDisable')
+FCA_OPT = True #Params().get_bool('RadarDisable')
 
 class CarState(CarStateBase):
   def __init__(self, CP):
@@ -42,7 +42,7 @@ class CarState(CarStateBase):
     self.steer_anglecorrection = float(int(Params().get("OpkrSteerAngleCorrection", encoding="utf8")) * 0.1)
     self.gear_correction = Params().get_bool("JustDoGearD")
     self.fca11_message = Params().get_bool("FCA11Message")
-    self.rd_conf = Params().get_bool("RadarDisable")
+    self.rd_conf = True #Params().get_bool("RadarDisable")
     self.brake_check = False
     self.cancel_check = False
     

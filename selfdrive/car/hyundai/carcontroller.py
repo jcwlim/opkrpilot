@@ -202,7 +202,7 @@ class CarController():
     self.gap_by_spd_on_sw_cnt = 0
     self.gap_by_spd_on_sw_cnt2 = 0
 
-    self.radar_disabled_conf = self.params.get_bool("RadarDisable")
+    self.radar_disabled_conf = True #self.params.get_bool("RadarDisable")
     self.prev_cruiseButton = 0
     self.gapsettingdance = 4
     self.lead_visible = False
