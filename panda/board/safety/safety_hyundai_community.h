@@ -255,9 +255,9 @@ static int hyundai_community_fwd_hook(int bus_num, CANPacket_t *to_fwd) {
     if (bus_num == 2) {
       if (!OP_LKAS_live || (addr != 832 && addr != 1157)) {
         if (!OP_SCC_live || (addr != 1056 && addr != 1057 && addr != 1290 && addr != 905)) {
-          bus_fwd = 2 // Jason fwd_to_bus1 == 1 ? 10 : 0;
+          bus_fwd = 2; // Jason fwd_to_bus1 == 1 ? 10 : 0;
         } else {
-          bus_fwd = 2 // Jason fwd_to_bus1;  // EON create SCC12 for Car
+          bus_fwd = 2; // Jason fwd_to_bus1;  // EON create SCC12 for Car
           OP_SCC_live -= 1;
         }
       } else if (HKG_mdps_bus == 0) {
