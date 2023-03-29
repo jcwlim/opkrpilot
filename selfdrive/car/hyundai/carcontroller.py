@@ -976,9 +976,9 @@ class CarController():
           else:
             self.fca11inc += 4
           self.fca11alivecnt = self.fca11maxcnt - self.fca11inc
-          if CS.CP.fcaBus == -1:
-            print("test")
-            #can_sends.append(create_fca11(self.packer, CS.fca11, self.fca11alivecnt, self.fca11supcnt))
+          #if CS.CP.fcaBus == -1:
+          print("test")
+          can_sends.append(create_fca11(self.packer, CS.fca11, self.fca11alivecnt, self.fca11supcnt))
 
         self.scc12cnt += 1
         self.scc12cnt %= 0xF
@@ -1148,13 +1148,13 @@ class CarController():
         self.accel = accel
       if frame % 20 == 0:
         if self.radar_disabled_conf:
-          if CS.CP.fcaBus == -1:
+          #if CS.CP.fcaBus == -1:
             print("test2")
-            # can_sends.append(create_fca12(self.packer))
+            can_sends.append(create_fca12(self.packer))
         can_sends.append(create_scc13(self.packer, CS.scc13))
       if frame % 50 == 0:
         print("test3")
-        #can_sends.append(create_scc42a(self.packer))
+        can_sends.append(create_scc42a(self.packer))
     elif (CS.CP.sccBus != 0 or self.radarDisableActivated) and self.longcontrol:
       if self.radar_disabled_conf:
         self.fca11alivecnt = CS.fca11init["CR_FCA_Alive"]
