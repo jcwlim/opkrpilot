@@ -186,7 +186,7 @@ def create_scc12(packer, apply_accel, enabled, scc_live, gaspressed, brakepresse
   return packer.make_can_msg("SCC12", 0, values)
 
 def create_scc13(packer, scc13):
-  #values = scc13
+  values = scc13
   values["SCCDrvModeRValue"] = 2 #Jason
   values["SCC_Equip"] = 1 #Jason
   values["Lead_Veh_Dep_Alert_USM"] = 2 #Jason
