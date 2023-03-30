@@ -114,7 +114,7 @@ def create_hda_mfc(packer, CS, enabled, left_lane, right_lane ):
   # HDA_Icon_State 2 = HDA active
   return packer.make_can_msg("LFAHDA_MFC", 0, values)  
 
-def create_scc11(packer, frame, set_speed, lead_visible, scc_live, lead_dist, lead_vrel, lead_yrel, car_fingerprint, speed, standstill, gap_setting, stopping, radar_recognition, scc11,scc11cnt):
+def create_scc11(packer, frame, set_speed, lead_visible, scc_live, lead_dist, lead_vrel, lead_yrel, car_fingerprint, speed, standstill, gap_setting, stopping, radar_recognition, scc11,scc11cnt, radarDisable):
   values = scc11
   # values["AliveCounterACC"] = frame // 2 % 0x10
   if not radar_recognition:
@@ -130,7 +130,7 @@ def create_scc11(packer, frame, set_speed, lead_visible, scc_live, lead_dist, le
       values["SCCInfoDisplay"] = 0
     values["AliveCounterACC"] = scc11cnt
     values["DriverAlertDisplay"] = 0
-    values["MainMode_ACC"] = 1
+    values["MainMode_ACC"] = 1 if radarDisable else 0
     values["VSetDis"] = set_speed
     values["TauGapSet"] = gap_setting
     values["ObjValid"] = lead_visible
@@ -141,8 +141,9 @@ def create_scc11(packer, frame, set_speed, lead_visible, scc_live, lead_dist, le
 
   return packer.make_can_msg("SCC11", 0, values)
 
-def create_scc12(packer, apply_accel, enabled, scc_live, gaspressed, brakepressed, aebcmdact, car_fingerprint, speed, stopping, standstill, radar_recognition, cnt, scc12):
-  values = scc12
+def create_scc12(packer, apply_accel, enabled, scc_live, gaspressed, brakepressed, aebcmdact, car_fingerprint, speed, stopping, standstill, radar_recognition, cnt, scc12, radarDisable):
+  if not radarDisable:
+    values = scc12
   if not aebcmdact:
     if enabled and car_fingerprint == CAR.NIRO_EV_DE:
       values["ACCMode"] = 2 if gaspressed and (apply_accel > -0.2) else 1
@@ -178,21 +179,22 @@ def create_scc12(packer, apply_accel, enabled, scc_live, gaspressed, brakepresse
   values["CF_VSM_ConfMode"] = 1 #Jason
   values["AEB_Status"] = 1 # Jason
   values["CR_VSM_Alive"] = cnt
-  values["CR_VSM_ChkSum"] = 0
+  #values["CR_VSM_ChkSum"] = 0
   dat = packer.make_can_msg("SCC12", 0, values)[2]
   values["CR_VSM_ChkSum"] = 16 - sum([sum(divmod(i, 16)) for i in dat]) % 16
 
   return packer.make_can_msg("SCC12", 0, values)
 
 def create_scc13(packer, scc13):
-  values = scc13
+  #values = scc13
   values["SCCDrvModeRValue"] = 2 #Jason
   values["SCC_Equip"] = 1 #Jason
   values["Lead_Veh_Dep_Alert_USM"] = 2 #Jason
   return packer.make_can_msg("SCC13", 0, values)
 
-def create_scc14(packer, enabled, scc14, aebcmdact, lead_visible, lead_dist, v_ego, standstill, car_fingerprint):
-  values = scc14
+def create_scc14(packer, enabled, scc14, aebcmdact, lead_visible, lead_dist, v_ego, standstill, car_fingerprint, radarDisable):
+  if not radarDisable:
+    values = scc14
   if enabled and not aebcmdact and car_fingerprint == CAR.NIRO_EV_DE:
     if standstill:
       values["JerkUpperLimit"] = 0.5
