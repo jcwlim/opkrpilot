@@ -541,69 +541,71 @@ class CarState(CarStateBase):
       ("WHL_SPD11", 50)
     ]
 
-    if not self.rd_conf:
-      signals += [
-        ("MainMode_ACC", "SCC11"),
-        ("SCCInfoDisplay", "SCC11"),
-        ("AliveCounterACC", "SCC11"),
-        ("VSetDis", "SCC11"),
-        ("ObjValid", "SCC11"),
-        ("DriverAlertDisplay", "SCC11"),
-        ("TauGapSet", "SCC11"),
-        ("ACC_ObjStatus", "SCC11"),
-        ("ACC_ObjLatPos", "SCC11"),
-        ("ACC_ObjDist", "SCC11"), #TK211X value is 204.6
-        ("ACC_ObjRelSpd", "SCC11"),
-        ("Navi_SCC_Curve_Status", "SCC11"),
-        ("Navi_SCC_Curve_Act", "SCC11"),
-        ("Navi_SCC_Camera_Act", "SCC11"),
-        ("Navi_SCC_Camera_Status", "SCC11"),
+    # if not self.rd_conf:
+    #   signals += [
+    #     ("MainMode_ACC", "SCC11"),
+    #     ("SCCInfoDisplay", "SCC11"),
+    #     ("AliveCounterACC", "SCC11"),
+    #     ("VSetDis", "SCC11"),
+    #     ("ObjValid", "SCC11"),
+    #     ("DriverAlertDisplay", "SCC11"),
+    #     ("TauGapSet", "SCC11"),
+    #     ("ACC_ObjStatus", "SCC11"),
+    #     ("ACC_ObjLatPos", "SCC11"),
+    #     ("ACC_ObjDist", "SCC11"), #TK211X value is 204.6
+    #     ("ACC_ObjRelSpd", "SCC11"),
+    #     ("Navi_SCC_Curve_Status", "SCC11"),
+    #     ("Navi_SCC_Curve_Act", "SCC11"),
+    #     ("Navi_SCC_Camera_Act", "SCC11"),
+    #     ("Navi_SCC_Camera_Status", "SCC11"),
 
-        ("ACCMode", "SCC12"),
-        ("CF_VSM_Prefill", "SCC12"),
-        ("CF_VSM_DecCmdAct", "SCC12"),
-        ("CF_VSM_HBACmd", "SCC12"),
-        ("CF_VSM_Warn", "SCC12"),
-        ("CF_VSM_Stat", "SCC12"),
-        ("CF_VSM_BeltCmd", "SCC12"),
-        ("ACCFailInfo", "SCC12"),
-        ("StopReq", "SCC12"),
-        ("CR_VSM_DecCmd", "SCC12"),
-        ("aReqRaw", "SCC12"), #aReqMax
-        ("TakeOverReq", "SCC12"),
-        ("PreFill", "SCC12"),
-        ("aReqValue", "SCC12"), #aReqMin
-        ("CF_VSM_ConfMode", "SCC12"),
-        ("AEB_Failinfo", "SCC12"),
-        ("AEB_Status", "SCC12"),
-        ("AEB_CmdAct", "SCC12"),
-        ("AEB_StopReq", "SCC12"),
-        ("CR_VSM_Alive", "SCC12"),
-        ("CR_VSM_ChkSum", "SCC12"),
+    #     ("ACCMode", "SCC12"),
+    #     ("CF_VSM_Prefill", "SCC12"),
+    #     ("CF_VSM_DecCmdAct", "SCC12"),
+    #     ("CF_VSM_HBACmd", "SCC12"),
+    #     ("CF_VSM_Warn", "SCC12"),
+    #     ("CF_VSM_Stat", "SCC12"),
+    #     ("CF_VSM_BeltCmd", "SCC12"),
+    #     ("ACCFailInfo", "SCC12"),
+    #     ("StopReq", "SCC12"),
+    #     ("CR_VSM_DecCmd", "SCC12"),
+    #     ("aReqRaw", "SCC12"), #aReqMax
+    #     ("TakeOverReq", "SCC12"),
+    #     ("PreFill", "SCC12"),
+    #     ("aReqValue", "SCC12"), #aReqMin
+    #     ("CF_VSM_ConfMode", "SCC12"),
+    #     ("AEB_Failinfo", "SCC12"),
+    #     ("AEB_Status", "SCC12"),
+    #     ("AEB_CmdAct", "SCC12"),
+    #     ("AEB_StopReq", "SCC12"),
+    #     ("CR_VSM_Alive", "SCC12"),
+    #     ("CR_VSM_ChkSum", "SCC12"),
 
-        ("SCCDrvModeRValue", "SCC13"),
-        ("SCC_Equip", "SCC13"),
-        ("AebDrvSetStatus", "SCC13"),
+    #     ("SCCDrvModeRValue", "SCC13"),
+    #     ("SCC_Equip", "SCC13"),
+    #     ("AebDrvSetStatus", "SCC13"),
 
-        ("JerkUpperLimit", "SCC14"),
-        ("JerkLowerLimit", "SCC14"),
-        ("SCCMode2", "SCC14"),
-        ("ComfortBandUpper", "SCC14"),
-        ("ComfortBandLower", "SCC14"),
-      ]
-    if CP.sccBus == 0 and CP.pcmCruise not self.rd_conf:
-      checks += [
-        ("SCC11", 50),
-        ("SCC12", 50),
-      ]
+    #     ("JerkUpperLimit", "SCC14"),
+    #     ("JerkLowerLimit", "SCC14"),
+    #     ("SCCMode2", "SCC14"),
+    #     ("ComfortBandUpper", "SCC14"),
+    #     ("ComfortBandLower", "SCC14"),
+    #   ]
+
+    if CP.sccBus == 0 and CP.pcmCruise:
+      print("scc11 cancel")
+      # checks += [
+      #   ("SCC11", 50),
+      #   ("SCC12", 50),
+      # ]
     if CP.fcaBus == 0:
       signals.append(("CR_Vcu_AccPedDep_Pos", "E_EMS11"))
       signals += [
         ("FCA_CmdAct", "FCA11"),
         ("CF_VSM_Warn", "FCA11")
       ]
-      if not self.rd_conf:
-        checks += [("FCA11", 50)]
+      #checks += [("FCA11", 50)]
+      print("cancel fca11")
 
     if CP.mdpsBus == 0:
       signals += [
@@ -654,7 +656,7 @@ class CarState(CarStateBase):
         ("EMS16", 100)
       ]
 
-    if CP.sccBus == =1:
+    if CP.sccBus == -1:
       signals += [("CF_Lvr_CruiseSet", "LVR12")]
       
 
