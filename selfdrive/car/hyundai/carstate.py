@@ -208,7 +208,7 @@ class CarState(CarStateBase):
     ret.cruiseState.available = cp.vl["TCS13"]["ACCEnable"] == 0 #Jason
     ret.cruiseState.enabled = cp.vl["TCS13"]["ACC_REQ"] != 3 #Jason
     ret.cruiseState.standstill = False
-    ret.cruiseState.enabledAcc = ret.cruiseState.enabled
+    #ret.cruiseState.enabledAcc = ret.cruiseState.enabled
     self.cruiseState_standstill = ret.cruiseState.standstill
     self.is_set_speed_in_mph = bool(cp.vl["CLU11"]["CF_Clu_SPEED_UNIT"])
     ret.isMph = self.is_set_speed_in_mph
