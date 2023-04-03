@@ -193,8 +193,8 @@ def create_scc13(packer, scc13):
   return packer.make_can_msg("SCC13", 0, values)
 
 def create_scc14(packer, enabled, scc14, aebcmdact, lead_visible, lead_dist, v_ego, standstill, car_fingerprint, radarDisable):
-  if not radarDisable:
-    values = scc14
+  #if not radarDisable:
+  values = scc14
   if enabled and not aebcmdact and car_fingerprint == CAR.NIRO_EV_DE:
     if standstill:
       values["JerkUpperLimit"] = 0.5
