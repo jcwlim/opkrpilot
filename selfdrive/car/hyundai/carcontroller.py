@@ -1157,8 +1157,9 @@ class CarController():
         can_sends.append(create_scc42a(self.packer))
     elif (CS.CP.sccBus != 0 or self.radarDisableActivated) and self.longcontrol:
       if self.radar_disabled_conf:
-        self.fca11alivecnt = CS.fca11init["CR_FCA_Alive"]
-        self.fca11supcnt = CS.fca11init["Supplemental_Counter"]
+        #self.fca11alivecnt = CS.fca11init["CR_FCA_Alive"]
+        #self.fca11supcnt = CS.fca11init["Supplemental_Counter"]
+        print("bypass")
       self.counter_init = True
       self.scc12cnt = CS.scc12init["CR_VSM_Alive"]
       self.scc11cnt = CS.scc11init["AliveCounterACC"]
