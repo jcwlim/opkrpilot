@@ -64,7 +64,7 @@ class RadarInterface(RadarInterfaceBase):
       #self.trigger_msg = 0x420
       self.trigger_msg = RADAR_START_ADDR + RADAR_MSG_COUNT - 1
       self.track_id = 0
-      self.radar_off_can = CP.radarOffCan
+      self.radar_off_can = True #CP.radarOffCan
 
   def update(self, can_strings):
     if USE_RADAR_TRACK:
