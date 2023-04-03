@@ -61,7 +61,7 @@ class RadarInterface(RadarInterfaceBase):
     else:
       self.rcp = get_radar_can_parser(CP)
       self.updated_messages = set()
-      self.trigger_msg = 0x420
+      #self.trigger_msg = 0x420
       self.track_id = 0
       self.radar_off_can = CP.radarOffCan
 
