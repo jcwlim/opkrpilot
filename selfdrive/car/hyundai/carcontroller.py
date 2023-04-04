@@ -504,10 +504,10 @@ class CarController():
     if self.mode_change_timer > 0:
       self.mode_change_timer -= 1
 
-    if pcm_cancel_cmd and self.longcontrol:
+    if pcm_cancel_cmd and not self.longcontrol:
       can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.CANCEL, clu11_speed, CS.CP.sccBus))
 
-    if CS.out.cruiseState.standstill:
+    if CS.out.cruiseState.standstill and not self.longcontrol:
       self.standstill_status = 1
       if self.opkr_autoresume:
         # run only first time when the car stopped
@@ -560,7 +560,7 @@ class CarController():
     elif self.last_lead_distance != 0:
       self.last_lead_distance = 0
       self.standstill_res_button = False
-    elif self.opkr_variablecruise and CS.acc_active and CS.out.cruiseState.modeSel > 0:
+    elif self.opkr_variablecruise and CS.acc_active and CS.out.cruiseState.modeSel > 0 and not self.longcontrol:
       self.on_speed_control = self.NC.onSpeedControl
       self.on_speed_bump_control = self.NC.onSpeedBumpControl
       self.curv_speed_control = self.NC.curvSpeedControl
@@ -832,46 +832,46 @@ class CarController():
     opkr_cruise_auto_res_condition = False
     opkr_cruise_auto_res_condition = not self.opkr_cruise_auto_res_condition or CS.out.gasPressed
     t_speed = 20 if CS.is_set_speed_in_mph else 30
-    if self.auto_res_timer > 0:
-      self.auto_res_timer -= 1
-    elif self.model_speed > 95 and self.cancel_counter == 0 and not CS.cruise_active and not CS.out.brakeLights and round(CS.VSetDis) >= t_speed and \
-     (1 < CS.lead_distance < 149 or round(CS.clu_Vanz) > t_speed) and round(CS.clu_Vanz) >= 3 and self.cruise_init and \
-     self.opkr_cruise_auto_res and opkr_cruise_auto_res_condition and (self.auto_res_limit_sec == 0 or self.auto_res_limit_timer < self.auto_res_limit_sec) and \
-     (self.auto_res_delay == 0 or self.auto_res_delay_timer >= self.auto_res_delay):
-      if self.opkr_cruise_auto_res_option == 0:
-        can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.RES_ACCEL)) if not self.longcontrol \
-         else can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.RES_ACCEL, clu11_speed, CS.CP.sccBus))  # auto res
-        self.auto_res_starting = True
-        self.res_speed = round(CS.VSetDis) if CS.is_set_speed_in_mph or self.osm_spdlimit_enabled else round(CS.clu_Vanz*1.1)
-        self.res_speed_timer = 300
-        self.resume_cnt += 1
-        if self.resume_cnt >= randint(6, 8):
-          self.resume_cnt = 0
-          self.auto_res_timer = randint(30, 36)
-      elif self.opkr_cruise_auto_res_option == 1:
-        can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.SET_DECEL)) if not self.longcontrol \
-         else can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.SET_DECEL, clu11_speed, CS.CP.sccBus)) # auto res but set_decel to set current speed
-        self.auto_res_starting = True
-        self.v_cruise_kph_auto_res = round(CS.clu_Vanz)
-        self.res_speed_timer = 50
-        self.resume_cnt += 1
-        if self.resume_cnt >= randint(6, 8):
-          self.resume_cnt = 0
-          self.auto_res_timer = randint(30, 36)
-      elif self.opkr_cruise_auto_res_option == 2:
-        if not self.longcontrol:
-          can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.RES_ACCEL)) if 1 < CS.lead_distance < 149 \
-           else can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.SET_DECEL))
-        else:
-          can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.RES_ACCEL, clu11_speed, CS.CP.sccBus)) if 1 < CS.lead_distance < 149 \
-           else can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.SET_DECEL, clu11_speed, CS.CP.sccBus))
-        self.auto_res_starting = True
-        self.v_cruise_kph_auto_res = round(CS.clu_Vanz)
-        self.res_speed_timer = 50
-        self.resume_cnt += 1
-        if self.resume_cnt >= randint(6, 8):
-          self.resume_cnt = 0
-          self.auto_res_timer = randint(30, 36)
+    # if self.auto_res_timer > 0:
+    #   self.auto_res_timer -= 1
+    # elif self.model_speed > 95 and self.cancel_counter == 0 and not CS.cruise_active and not CS.out.brakeLights and round(CS.VSetDis) >= t_speed and \
+    #  (1 < CS.lead_distance < 149 or round(CS.clu_Vanz) > t_speed) and round(CS.clu_Vanz) >= 3 and self.cruise_init and \
+    #  self.opkr_cruise_auto_res and opkr_cruise_auto_res_condition and (self.auto_res_limit_sec == 0 or self.auto_res_limit_timer < self.auto_res_limit_sec) and \
+    #  (self.auto_res_delay == 0 or self.auto_res_delay_timer >= self.auto_res_delay):
+    #   if self.opkr_cruise_auto_res_option == 0:
+    #     can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.RES_ACCEL)) if not self.longcontrol \
+    #      else can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.RES_ACCEL, clu11_speed, CS.CP.sccBus))  # auto res
+    #     self.auto_res_starting = True
+    #     self.res_speed = round(CS.VSetDis) if CS.is_set_speed_in_mph or self.osm_spdlimit_enabled else round(CS.clu_Vanz*1.1)
+    #     self.res_speed_timer = 300
+    #     self.resume_cnt += 1
+    #     if self.resume_cnt >= randint(6, 8):
+    #       self.resume_cnt = 0
+    #       self.auto_res_timer = randint(30, 36)
+    #   elif self.opkr_cruise_auto_res_option == 1:
+    #     can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.SET_DECEL)) if not self.longcontrol \
+    #      else can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.SET_DECEL, clu11_speed, CS.CP.sccBus)) # auto res but set_decel to set current speed
+    #     self.auto_res_starting = True
+    #     self.v_cruise_kph_auto_res = round(CS.clu_Vanz)
+    #     self.res_speed_timer = 50
+    #     self.resume_cnt += 1
+    #     if self.resume_cnt >= randint(6, 8):
+    #       self.resume_cnt = 0
+    #       self.auto_res_timer = randint(30, 36)
+    #   elif self.opkr_cruise_auto_res_option == 2:
+    #     if not self.longcontrol:
+    #       can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.RES_ACCEL)) if 1 < CS.lead_distance < 149 \
+    #        else can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.SET_DECEL))
+    #     else:
+    #       can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.RES_ACCEL, clu11_speed, CS.CP.sccBus)) if 1 < CS.lead_distance < 149 \
+    #        else can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.SET_DECEL, clu11_speed, CS.CP.sccBus))
+    #     self.auto_res_starting = True
+    #     self.v_cruise_kph_auto_res = round(CS.clu_Vanz)
+    #     self.res_speed_timer = 50
+    #     self.resume_cnt += 1
+    #     if self.resume_cnt >= randint(6, 8):
+    #       self.resume_cnt = 0
+    #       self.auto_res_timer = randint(30, 36)
 
     if CS.out.brakeLights and CS.out.vEgo == 0 and not CS.out.cruiseState.standstill:
       self.standstill_status_timer += 1
