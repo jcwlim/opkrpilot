@@ -176,6 +176,13 @@ static int hyundai_community_tx_hook(CANPacket_t *to_send, bool longitudinal_all
       }
     }
 
+    // UDS: Only tester present ("\x02\x3E\x80\x00\x00\x00\x00\x00") allowed on diagnostics address
+    if (addr == 2000) {
+      if ((GET_BYTES_04(to_send) != 0x00803E02U) || (GET_BYTES_48(to_send) != 0x0U)) {
+        tx = 0;
+      }
+    }
+
     // no torque if controls is not allowed
     if (!controls_allowed && (desired_torque != 0)) {
       violation = 1;
