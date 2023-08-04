@@ -976,8 +976,8 @@ class CarController():
           else:
             self.fca11inc += 4
           self.fca11alivecnt = self.fca11maxcnt - self.fca11inc
-          if CS.CP.fcaBus == -1:
-            can_sends.append(create_fca11(self.packer, CS.fca11, self.fca11alivecnt, self.fca11supcnt))
+          #if CS.CP.fcaBus == -1:
+            #can_sends.append(create_fca11(self.packer, CS.fca11, self.fca11alivecnt, self.fca11supcnt))
 
         self.scc12cnt += 1
         self.scc12cnt %= 0xF
@@ -1154,9 +1154,9 @@ class CarController():
          CS.out.vEgo, self.acc_standstill, self.car_fingerprint))
         self.accel = accel
       if frame % 20 == 0:
-        if self.radar_disabled_conf:
-          if CS.CP.fcaBus == -1:
-            can_sends.append(create_fca12(self.packer))
+        #if self.radar_disabled_conf:
+          #if CS.CP.fcaBus == -1:
+            #can_sends.append(create_fca12(self.packer))
         can_sends.append(create_scc13(self.packer, CS.scc13))
       if frame % 50 == 0:
         can_sends.append(create_scc42a(self.packer))
