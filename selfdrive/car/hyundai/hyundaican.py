@@ -137,6 +137,16 @@ def create_scc11(packer, frame, set_speed, lead_visible, scc_live, lead_dist, le
     values["ACC_ObjDist"] = clip(lead_dist if lead_visible else 204.6, 0., 204.6)
     values["ACC_ObjLatPos"] = clip(-lead_yrel if lead_visible else 0, -170., 170.)
 
+  values["DriverAlertDisplay"] = 0
+  values["MainMode_ACC"] = 1
+  values["VSetDis"] = set_speed
+  values["TauGapSet"] = gap_setting
+  values["ObjValid"] = lead_visible
+  values["ACC_ObjStatus"] = lead_visible
+  values["ACC_ObjRelSpd"] = clip(lead_vrel if lead_visible else 0, -20., 20.)
+  values["ACC_ObjDist"] = clip(lead_dist if lead_visible else 204.6, 0., 204.6)
+  values["ACC_ObjLatPos"] = clip(-lead_yrel if lead_visible else 0, -170., 170.)
+
   return packer.make_can_msg("SCC11", 0, values)
 
 def create_scc12(packer, apply_accel, enabled, scc_live, gaspressed, brakepressed, aebcmdact, car_fingerprint, speed, stopping, standstill, radar_recognition, cnt, scc12):
@@ -172,8 +182,13 @@ def create_scc12(packer, apply_accel, enabled, scc_live, gaspressed, brakepresse
     else:
       values["StopReq"] = 0
     values["ACCMode"] = 1 if enabled else 0 # 2 if gas padel pressed
+  values["ACCMode"] = 2 if gaspressed and (apply_accel > -0.2) else 1
+  values["StopReq"] = 1 if stopping else 0
+  values["aReqRaw"] = apply_accel
+  values["aReqValue"] = apply_accel
   values["CR_VSM_Alive"] = cnt
-  values["CR_VSM_ChkSum"] = 0
+  values["CF_VSM_ConfMode"] = 1
+  values["AEB_Status"] = 1  # AEB disabled
   dat = packer.make_can_msg("SCC12", 0, values)[2]
   values["CR_VSM_ChkSum"] = 16 - sum([sum(divmod(i, 16)) for i in dat]) % 16
 
@@ -181,6 +196,10 @@ def create_scc12(packer, apply_accel, enabled, scc_live, gaspressed, brakepresse
 
 def create_scc13(packer, scc13):
   values = scc13
+  values["SCCDrvModeRValue"] = 2
+  values["SCC_Equip"] = 1
+  values["Lead_Veh_Dep_Alert_USM"] = 2
+  
   return packer.make_can_msg("SCC13", 0, values)
 
 def create_scc14(packer, enabled, scc14, aebcmdact, lead_visible, lead_dist, v_ego, standstill, car_fingerprint):
