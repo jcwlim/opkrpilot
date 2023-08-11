@@ -905,21 +905,21 @@ class CarController():
     if CS.CP.mdpsBus: # send mdps12 to LKAS to prevent LKAS error
       can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
 
-    # # tester present - w/ no response (keeps radar disabled)
-    # if CS.CP.openpilotLongitudinalControl:
-    #   if (frame % 100) == 0:
-    #     can_sends.append([0x7D0, 0, b"\x02\x3E\x80\x00\x00\x00\x00\x00", 0])
+    # tester present - w/ no response (keeps radar disabled)
+    if True #CS.CP.openpilotLongitudinalControl:
+      if (frame % 100) == 0:
+        can_sends.append([0x7D0, 0, b"\x02\x3E\x80\x00\x00\x00\x00\x00", 0])
 
-    # if frame % 2 == 0 and CS.CP.openpilotLongitudinalControl:
-    #   lead_visible = False
-    #   accel = actuators.accel if enabled else 0
-    #   jerk = clip(2.0 * (accel - CS.out.aEgo), -12.7, 12.7)
-    #   if accel < 0:
-    #     accel = interp(accel - CS.out.aEgo, [-1.0, -0.5], [2 * accel, accel])
-    #   accel = clip(accel, CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX)
-    #   stopping = (actuators.longControlState == LongCtrlState.stopping)
-    #   set_speed_in_units = hud_speed * (CV.MS_TO_MPH if CS.clu11["CF_Clu_SPEED_UNIT"] == 1 else CV.MS_TO_KPH)
-    #   can_sends.extend(create_acc_commands(self.packer, enabled, accel, jerk, int(frame / 2), lead_visible, set_speed_in_units, stopping))
+    if frame % 2 == 0:
+      lead_visible = False
+      accel = actuators.accel if enabled else 0
+      jerk = clip(2.0 * (accel - CS.out.aEgo), -12.7, 12.7)
+      if accel < 0:
+        accel = interp(accel - CS.out.aEgo, [-1.0, -0.5], [2 * accel, accel])
+      accel = clip(accel, CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX)
+      stopping = (actuators.longControlState == LongCtrlState.stopping)
+      set_speed_in_units = hud_speed * (CV.MS_TO_MPH if CS.clu11["CF_Clu_SPEED_UNIT"] == 1 else CV.MS_TO_KPH)
+      can_sends.extend(create_acc_commands(self.packer, enabled, accel, jerk, int(frame / 2), lead_visible, set_speed_in_units, stopping))
 
     if self.radar_disabled_conf: #xps-genesis's way
       if self.prev_cruiseButton != CS.cruise_buttons:  # gap change for RadarDisable
